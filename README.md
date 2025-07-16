@@ -28,7 +28,7 @@ Docker Compose plugin or CLI
 ⚡ Quick Start
 1️⃣ Clone the Repository
 
-git clone https://github.com/your-username/prometheus-stack-postgres-windows.git
+git clone [https://github.com/jannos0/prometheus-stack-postgres-windows.git ](https://github.com/jannos0/prometheus-stack)
 cd [path]/prometheus-stack-postgres-windows
 
 2️⃣ Configure PostgreSQL
