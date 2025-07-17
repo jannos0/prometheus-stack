@@ -1,0 +1,61 @@
+Prometheus Stack for PostgreSQL 17 on Windows Server 🚀🖥️ A comprehensive monitoring solution for PostgreSQL 17 running on Windows Server, orchestrated with Docker Compose. This stack includes Prometheus for data collection, Grafana for visualization, and PostgreSQL Exporter for database metrics.
+
+✨ Features End-to-end monitoring for PostgreSQL 17 on Windows Server ✅
+
+Pre-configured Docker Compose setup
+
+User-friendly Grafana dashboards
+
+Automatic metrics collection via PostgreSQL Exporter
+
+🧩 Components :
+
+Prometheus. Time-series metrics collection and storage Grafana. Metrics visualization and dashboarding PostgreSQL 17 🐘 Database server (monitoring target) PostgreSQL Exporter. Exposes PostgreSQL metrics to Prometheus
+
+💻 Prerequisites Windows Server (2019 or newer recommended) 🪟
+
+Docker Desktop for Windows 🐋
+
+Docker Compose plugin or CLI
+
+⚡ Quick Start 1️⃣ Clone the Repository
+
+git clone https://github.com/jannos0/prometheus-stack.git cd [path]/prometheus-stack-postgres-windows
+
+2️⃣ Configure PostgreSQL Default variables provided.
+
+For production, edit .env or docker-compose.yml to change POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB.
+
+3️⃣ Start the Stack
+
+docker compose up -d
+
+🔗 Access Points Grafana Dashboard http://localhost:3000 (user: admin / pass: admin)
+
+Prometheus UI http://localhost:9090
+
+PostgreSQL Exporter http://localhost:9187/metrics
+
+⚙️ Configuration Overview Prometheus scrapes PostgreSQL Exporter at localhost:9187.
+
+Grafana is provisioned with example PostgreSQL dashboards.
+
+Exporter connects securely to PostgreSQL 17 using provided credentials.
+
+🛠️ Customization Dashboards: Drop more into grafana/provisioning/dashboards
+
+Prometheus jobs: Edit prometheus/prometheus.yml
+
+Add exporters: Extend the stack for broader monitoring
+
+🧑‍💻 Usage Tips Change all default passwords before production.
+
+Persist data using Docker volumes for backups.
+
+Find advanced Grafana dashboards on Grafana Labs marketplace.
+
+🆘 Troubleshooting Ports in use? 📛 Change port mappings in docker-compose.yml.
+
+Exporter errors? 🔎 Check DB credentials and container connectivity.
+
+Containers won't start? 🐞 Run docker compose logs or check Docker Desktop in container logs available in the vm you will set it up.
