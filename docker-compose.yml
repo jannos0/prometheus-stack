@@ -13,6 +13,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./postgres/postgresql.conf:/etc/postgresql/postgresql.conf
       - ./postgres/pg_hba.conf:/etc/postgresql/pg_hba.conf
+      - ./setup-database.sql:/docker-entrypoint-initdb.d/setup-database.sql
     command: postgres -c config_file=/etc/postgresql/postgresql.conf
     networks:
       - monitoring
@@ -28,7 +29,7 @@ services:
     image: prometheuscommunity/postgres-exporter:latest
     container_name: postgres-exporter
     environment:
-      DATA_SOURCE_NAME: "postgresql://postgres_exporter:${EXPORTER_PASSWORD:-exporterpass123}@postgres:5432/postgres?sslmode=require"
+      DATA_SOURCE_NAME: "postgresql://postgres_exporter:${EXPORTER_PASSWORD:-exporter_secure_password_here}@postgres:5432/postgres?sslmode=disable"
       PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/queries.yaml"
     ports:
       - "9187:9187"
@@ -55,9 +56,6 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - ./prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml:ro
-      - ./prometheus/web-config.yml:/etc/prometheus/web-config.yml:ro
-      - ./certs:/etc/ssl/certs:ro
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -67,27 +65,23 @@ services:
       - '--web.console.libraries=/etc/prometheus/console_libraries'
       - '--web.console.templates=/etc/prometheus/consoles'
       - '--web.enable-lifecycle'
-      - '--web.config.file=/etc/prometheus/web-config.yml'
     depends_on:
       - postgres-exporter
     networks:
       - monitoring
     restart: unless-stopped
 
-  grafana:  
-    image: grafana/grafana:latest  
+  grafana:
+    image: grafana/grafana:latest
     container_name: grafana
     environment:
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin123}
-      # GF_SERVER_PROTOCOL: https
-      # GF_SERVER_CERT_FILE: /etc/ssl/certs/grafana.crt         # Uncomment if using SSL
-      # GF_SERVER_CERT_KEY: /etc/ssl/certs/grafana.key         # Uncomment if using SSL
       GF_DATABASE_TYPE: postgres
       GF_DATABASE_HOST: postgres:5432
       GF_DATABASE_NAME: grafana
       GF_DATABASE_USER: grafana
-      GF_DATABASE_PASSWORD: ${GRAFANA_DB_PASSWORD:-grafanapass123}
-      GF_DATABASE_SSL_MODE: disable 
+      GF_DATABASE_PASSWORD: ${GRAFANA_DB_PASSWORD:-grafana_admin_password_here}
+      GF_DATABASE_SSL_MODE: disable
       GF_INSTALL_PLUGINS: grafana-piechart-panel
     ports:
       - "3000:3000"
@@ -95,26 +89,9 @@ services:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
       - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
-      # - ./certs:/etc/ssl/certs:ro               # Uncomment if using SSL
     depends_on:
       postgres:
         condition: service_healthy
-    networks:
-      - monitoring
-    restart: unless-stopped
-
-  alertmanager:
-    image: prom/alertmanager:latest
-    container_name: alertmanager
-    ports:
-      - "9093:9093"
-    volumes:
-      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
-      - alertmanager_data:/alertmanager
-    command:
-      - '--config.file=/etc/alertmanager/alertmanager.yml'
-      - '--storage.path=/alertmanager'
-      - '--web.external-url=http://localhost:9093'
     networks:
       - monitoring
     restart: unless-stopped
@@ -123,7 +100,6 @@ volumes:
   postgres_data:
   prometheus_data:
   grafana_data:
-  alertmanager_data:
 
 networks:
   monitoring:

@@ -1,5 +1,5 @@
 -- Create monitoring user for PostgreSQL exporter
-CREATE USER postgres_exporter WITH PASSWORD 'exporterpass123';
+CREATE USER postgres_exporter WITH PASSWORD 'exporter_secure_password_here';
 ALTER USER postgres_exporter SET SEARCH_PATH TO postgres_exporter,public;
 
 -- Grant necessary permissions
@@ -10,7 +10,7 @@ GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO postgres_exporter;
 GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO postgres_exporter;
 
 -- Create Grafana database user
-CREATE USER grafana WITH PASSWORD 'grafanapass123';
+CREATE USER grafana WITH PASSWORD 'grafana_db_password_here';
 CREATE DATABASE grafana OWNER grafana;
 GRANT ALL PRIVILEGES ON DATABASE grafana TO grafana;
 

@@ -21,7 +21,7 @@ datasources:
     database: postgres
     user: grafana
     secureJsonData:
-      password: grafanapass123
+      password: grafana_db_password_here
     jsonData:
       sslmode: require
       maxOpenConns: 10
