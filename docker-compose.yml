@@ -13,6 +13,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./postgres/postgresql.conf:/etc/postgresql/postgresql.conf
       - ./postgres/pg_hba.conf:/etc/postgresql/pg_hba.conf
+      - ./setup-database.sql:/docker-entrypoint-initdb.d/setup-database.sql
     command: postgres -c config_file=/etc/postgresql/postgresql.conf
     networks:
       - monitoring
@@ -56,8 +57,6 @@ services:
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml:ro
-      - ./prometheus/web-config.yml:/etc/prometheus/web-config.yml:ro
-      - ./certs:/etc/ssl/certs:ro
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -67,7 +66,7 @@ services:
       - '--web.console.libraries=/etc/prometheus/console_libraries'
       - '--web.console.templates=/etc/prometheus/consoles'
       - '--web.enable-lifecycle'
-      - '--web.config.file=/etc/prometheus/web-config.yml'
+      #- '--alertmanager.url=http://alertmanager:9093' # Uncomment if using currect configuration for alertmanager
     depends_on:
       - postgres-exporter
     networks:
@@ -79,10 +78,10 @@ services:
     container_name: grafana
     environment:
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin123}
-      # GF_SERVER_PROTOCOL: https
-      # GF_SERVER_CERT_FILE: /etc/ssl/certs/grafana.crt         # Uncomment if using SSL
-      # GF_SERVER_CERT_KEY: /etc/ssl/certs/grafana.key         # Uncomment if using SSL
-      GF_DATABASE_TYPE: postgres
+      # GF_SERVER_PROTOCOL: https 
+      # GF_SERVER_CERT_FILE: /etc/ssl/certs/grafana.crt # Uncomment for HTTPS
+      # GF_SERVER_CERT_KEY: /etc/ssl/certs/grafana.key # Uncomment for HTTPS
+      GF_DATABASE_TYPE: postgres 
       GF_DATABASE_HOST: postgres:5432
       GF_DATABASE_NAME: grafana
       GF_DATABASE_USER: grafana
@@ -95,7 +94,7 @@ services:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
       - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
-      # - ./certs:/etc/ssl/certs:ro               # Uncomment if using SSL
+      # - ./certs:/etc/ssl/certs:ro # Uncomment for HTTPS
     depends_on:
       postgres:
         condition: service_healthy

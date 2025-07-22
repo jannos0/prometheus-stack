@@ -13,7 +13,7 @@ receivers:
   - name: 'web.hook'
     email_configs:
       - to: 'admin@yourcompany.com'
-        subject: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+        subject: 'Alert: {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
         body: |
           {{ range .Alerts }}
           Alert: {{ .Annotations.summary }}
@@ -21,10 +21,3 @@ receivers:
           Instance: {{ .Labels.instance }}
           Severity: {{ .Labels.severity }}
           {{ end }}
-
-inhibit_rules:
-  - source_match:
-      severity: 'critical'
-    target_match:
-      severity: 'warning'
-    equal: ['alertname', 'cluster', 'service']
