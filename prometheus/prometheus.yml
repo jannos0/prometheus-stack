@@ -16,7 +16,6 @@ alerting:
           - alertmanager:9093
 
 scrape_configs:
-  # Prometheus itself
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
