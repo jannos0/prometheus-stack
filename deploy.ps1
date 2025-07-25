@@ -5,7 +5,7 @@
 
 Write-Host "Starting PostgreSQL Monitoring Stack deployment..." -ForegroundColor Green
 
-# Check if Docker is installed
+# Docker Compose file path test
 if (!(Get-Command docker -ErrorAction SilentlyContinue)) {
     Write-Host "Docker is not installed. Please install Docker Desktop for Windows." -ForegroundColor Red
     exit 1
@@ -26,7 +26,6 @@ $directories = @(
     "grafana/dashboards",
     "postgres",
     "postgres-exporter",
-    "alertmanager",
     "certs"
 )
 
@@ -37,18 +36,20 @@ foreach ($dir in $directories) {
     }
 }
 
-# Generate SSL certificates
-Write-Host "Generating SSL certificates..." -ForegroundColor Yellow
-& openssl req -x509 -newkey rsa:4096 -nodes -keyout certs/server.key -out certs/server.crt -days 365 -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost"
-& openssl req -x509 -newkey rsa:4096 -nodes -keyout certs/prometheus.key -out certs/prometheus.crt -days 365 -subj "/C=US/ST=State/L=City/O=Organization/CN=prometheus"
-& openssl req -x509 -newkey rsa:4096 -nodes -keyout certs/grafana.key -out certs/grafana.crt -days 365 -subj "/C=US/ST=State/L=City/O=Organization/CN=grafana"
+# Generate SSL certificates, uncomment if ssl certificates are needed
+
+
+#Write-Host "Generating SSL certificates..." -ForegroundColor Yellow
+#& openssl req -x509 -newkey rsa:4096 -nodes -keyout certs/server.key -out certs/server.crt -days 365 -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost"
+#& openssl req -x509 -newkey rsa:4096 -nodes -keyout certs/prometheus.key -out certs/prometheus.crt -days 365 -subj "/C=US/ST=State/L=City/O=Organization/CN=prometheus"
+#& openssl req -x509 -newkey rsa:4096 -nodes -keyout certs/grafana.key -out certs/grafana.crt -days 365 -subj "/C=US/ST=State/L=City/O=Organization/CN=grafana"
 
 # Create .env file with default passwords
 $envContent = @"
-POSTGRES_PASSWORD=strongpassword123
-EXPORTER_PASSWORD=exporterpass123
-GRAFANA_PASSWORD=admin123
-GRAFANA_DB_PASSWORD=grafanapass123
+POSTGRES_PASSWORD=your_super_secure_password_here
+EXPORTER_PASSWORD=exporter_secure_password_here
+GRAFANA_PASSWORD=grafana_admin_password_here
+GRAFANA_DB_PASSWORD=grafana_db_password_here
 "@
 
 $envContent | Out-File -FilePath ".env" -Encoding utf8
@@ -67,9 +68,8 @@ Write-Host "Checking service status..." -ForegroundColor Yellow
 
 # Display access information
 Write-Host "`nMonitoring Stack URLs:" -ForegroundColor Green
-Write-Host "Grafana: https://localhost:3000 (admin/admin123)" -ForegroundColor Cyan
+Write-Host "Grafana: https://localhost:3000 (admin/grafana_admin_password_here)" -ForegroundColor Cyan
 Write-Host "Prometheus: http://localhost:9090 (admin/admin_password)" -ForegroundColor Cyan
-Write-Host "PostgreSQL: localhost:5432 (postgres/strongpassword123)" -ForegroundColor Cyan
-Write-Host "Alertmanager: http://localhost:9093" -ForegroundColor Cyan
+Write-Host "PostgreSQL: localhost:5432 (postgres/your_super_secure_password_here)" -ForegroundColor Cyan
 
 Write-Host "`nDeployment completed successfully!" -ForegroundColor Green
