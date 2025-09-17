@@ -17,13 +17,13 @@ datasources:
   - name: PostgreSQL
     type: postgres
     access: proxy
-    url: postgres:5432
+    url: YOUR_WINDOWS_SERVER_IP:5432  # Replace with your server IP
     database: postgres
-    user: grafana
+    user: postgres_exporter  # Or create a separate read-only user
     secureJsonData:
-      password: grafana_db_password_here
+      password: your_secure_exporter_password
     jsonData:
-      sslmode: require
+      sslmode: prefer  # Use 'disable' if SSL not configured
       maxOpenConns: 10
       maxIdleConns: 2
       connMaxLifetime: 14400

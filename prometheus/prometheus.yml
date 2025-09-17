@@ -38,17 +38,8 @@ scrape_configs:
         - 'pg_locks'
         - 'pg_stat_replication'
 
-  # Multi-host PostgreSQL instances (add additional hosts here)
-  - job_name: 'postgres-exporter-host2'
-    static_configs:
-      - targets: ['host2.example.com:9187']
-    scrape_interval: 15s
-    scrape_timeout: 10s
-    metrics_path: '/metrics'
-    honor_labels: true
-
-  # Node Exporter for system metrics (optional)
-  - job_name: 'node-exporter'
-    static_configs:
-      - targets: ['node-exporter:9100']
-    scrape_interval: 15s
+  # Add more PostgreSQL instances here if needed
+  # - job_name: 'postgres-exporter-prod'
+  #   static_configs:
+  #     - targets: ['prod-server:9187']
+  #   scrape_interval: 15s
