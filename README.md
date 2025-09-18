@@ -59,7 +59,7 @@ This repo supports two modes:
 
 ## ✅ Prerequisites
 
-- Docker and Docker Compose (v2 preferred; use `docker compose`, or `docker-compose` for v1)
+- Docker and Docker Compose, use `docker compose`, or `docker-compose`
 
 ---
 
