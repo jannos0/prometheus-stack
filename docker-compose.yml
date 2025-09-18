@@ -12,7 +12,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./postgres/postgresql.conf:/etc/postgresql/postgresql.conf
-      - ./prometheus-stack/postgres/pg_hba.conf:/etc/postgresql/pg_hba.conf
+      - ./postgres/pg_hba.conf:/etc/postgresql/pg_hba.conf
       - ./setup-database.sql:/docker-entrypoint-initdb.d/setup-database.sql
     command: postgres -c config_file=/etc/postgresql/postgresql.conf
     networks:

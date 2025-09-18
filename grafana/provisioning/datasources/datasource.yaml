@@ -11,10 +11,7 @@ datasources:
       httpMethod: POST
       queryTimeout: 60s
       timeInterval: 15s
-    secureJsonData:
-      httpHeaderValue1: 'Bearer your-token-here'
-  
-  - name: PostgreSQL
+    - name: PostgreSQL
     type: postgres
     access: proxy
     url: YOUR_WINDOWS_SERVER_IP:5432  # Replace with your server IP
